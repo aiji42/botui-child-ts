@@ -1,0 +1,11 @@
+version: '3'
+services:
+  devlopment:
+    build: .
+    tty: true
+    volumes:
+      - ./:/app
+      - node_modules_volume:/app/node_modules
+    working_dir: /app
+volumes:
+  node_modules_volume:
