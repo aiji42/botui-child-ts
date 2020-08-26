@@ -1,10 +1,17 @@
-import { FC } from 'react'
+import { FC, createContext, useState } from 'react'
 import { useCorsState } from 'use-cors-state'
 
-const Synchtonizer: FC = (props) => {
-  const [state, setState] = useCorsState('chat-messages', { window }, {})
+const SynchtonizerContext = createContext<{ setTargetWindow: (arg: Window) => void, state: any, setState: (arg: any) => void }>({
+  setTargetWindow: () => { }, state: {}, setState: () => { }
+})
 
-  return <div {...props}/>
+const Synchtonizer: FC = (props) => {
+  const [targetWindow, setTargetWindow] = useState<Window>(window)
+  const [state, setState] = useCorsState('chat-messages', { window: targetWindow }, {})
+
+  return (
+    <SynchtonizerContext.Provider value={{ setTargetWindow, state, setState }} {...props} />
+  )
 }
 
 export default Synchtonizer
