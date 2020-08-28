@@ -1,10 +1,7 @@
 {
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
-    "test": "jest",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\""
+    "start": "parcel serve ./src/index.html --hmr-port 5050",
+    "build": "parcel build ./src/index.html"
   },
   "dependencies": {
     "react": "^16.13.1",
@@ -12,15 +9,13 @@
     "use-cors-state": "^1.1.1"
   },
   "devDependencies": {
-    "@snowpack/app-scripts-react": "^1.10.0",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^10.0.3",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
-    "@types/snowpack-env": "^2.3.0",
     "jest": "^26.2.2",
+    "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.5",
-    "snowpack": "^2.9.0",
     "typescript": "^3.9.7"
   }
 }

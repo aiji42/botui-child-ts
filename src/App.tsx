@@ -1,14 +1,9 @@
 import React from 'react';
-import Board from './components/Board'
-import Synchtonizer from './components/Synchronizer';
+import Board from '../components/Board'
 
-interface AppProps {}
-
-function App({}: AppProps) {
+function App() {
   return (
-    <Synchtonizer>
-      <Board />
-    </Synchtonizer>
+    <Board />
   );
 }
 
