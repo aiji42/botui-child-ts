@@ -1,14 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import Synchronizer from '../Synchronizer'
 
 const Board = () => {
-  const ref = useRef<HTMLIFrameElement>(null)
+  const [iframeElement, setIframeElement] = useState<HTMLIFrameElement|null>(null)
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', height: '100vh' }}>
       {/* <iframe ref={ref} src={process.env.BOTUI_CHILD_ENDPOINT} height="100%" width="100%" frameBorder="no" /> */}
-      <iframe ref={ref} src="https://aiji42.github.io/use-postal-jp/" height="100%" width="100%" frameBorder="no" />
-      {!!ref.current?.contentWindow && <Synchronizer window={ref.current.contentWindow} />}
+      <iframe ref={setIframeElement} src="http://127.0.0.1:49841/" height="100%" width="100%" frameBorder="no" />
+      {!!iframeElement?.contentWindow && <Synchronizer window={iframeElement.contentWindow} />}
     </div>
   );
 };
