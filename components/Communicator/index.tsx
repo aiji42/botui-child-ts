@@ -14,8 +14,12 @@ const meses = [
 const Commmunicator = () => {
   const { messages, setMessages } = useContext(SynchtonizerContext)
   useEffect(() => {
+    if (messages.some(({ updated }) => updated)) {
+      const updatedIndex = messages.findIndex(({ updated }) => updated)
+      setMessages([...messages.slice(0, updatedIndex), { ...messages[updatedIndex], updated: false }])
+      return
+    }
     if (messages.some(({ completed }) => !completed)) return
-    console.log(messages)
     setMessages([...messages, meses[messages.length]])
   }, [messages])
 

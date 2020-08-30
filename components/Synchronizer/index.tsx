@@ -7,6 +7,7 @@ interface Message {
   content: any
   delay?: number
   completed: boolean
+  updated?: boolean
 }
 type Messages = Message[]
 
