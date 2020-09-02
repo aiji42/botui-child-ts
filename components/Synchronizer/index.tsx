@@ -8,6 +8,8 @@ interface Message {
   delay?: number
   completed: boolean
   updated?: boolean
+  before?: string
+  after?: string
 }
 type Messages = Message[]
 
