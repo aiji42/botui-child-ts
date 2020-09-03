@@ -1,4 +1,4 @@
-import React, { FC, createContext, Dispatch, SetStateAction } from 'react'
+import React, { FC, createContext, Dispatch, SetStateAction, useEffect } from 'react'
 import { useCorsState } from 'use-cors-state'
 import Commmunicator from '../Communicator'
 

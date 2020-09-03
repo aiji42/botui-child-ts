@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { SynchtonizerContext } from '../Synchronizer'
 import { getNodeText } from '@testing-library/react'
 
@@ -46,29 +46,37 @@ const values = (messages: Array<Message>): { [x: string]: any } => messages.redu
 
 const Commmunicator = () => {
   const { messages, setMessages } = useContext(SynchtonizerContext)
+  const [originals, setOriginals] = useState<Array<Message>>(meses)
 
   useEffect(() => {
-    messages.forEach((message, index) => meses[index] = message)
+    setOriginals([...messages, ...originals.slice(messages.length)])
+  }, [messages])
 
-    if (messages.some(({ updated }) => updated)) {
-      const updatedIndex = messages.findIndex(({ updated }) => updated)
-      setMessages([...messages.slice(0, updatedIndex), { ...messages[updatedIndex], updated: false }])
+  useEffect(() => {
+    const updatedIndex = originals.findIndex(({ updated }) => updated)
+    if (updatedIndex > 0) {
+      setMessages([...originals.slice(0, updatedIndex), { ...originals[updatedIndex], updated: false }])
       return
     }
+
     if (messages.some(({ completed }) => !completed)) return
 
-    const last = messages.slice(-1)[0]
-    if (last?.after) {
-      const afterFunction = new Function('values', 'message', last.after)
-      afterFunction(values(messages), last)
+    const unCompletedIndex = originals.findIndex(({ completed }) => !completed)
+    const tailMessage = originals[unCompletedIndex - 1]
+    if (tailMessage?.after) {
+      const afterFunction = new Function('values', 'message', tailMessage.after)
+      afterFunction(values(originals), tailMessage)
     }
-    const next = meses[messages.length]
-    if (next?.before) {
-      const beforeFuction = new Function('values', 'message', next.before)
-      beforeFuction(values(messages), next)
+
+    if (!originals[unCompletedIndex]) return
+    const nextMessage = { ...originals[unCompletedIndex], completed: false }
+    if (nextMessage?.before) {
+      const beforeFuction = new Function('values', 'message', nextMessage.before)
+      beforeFuction(values(originals), nextMessage)
     }
-    setMessages([...messages, next])
-  }, [messages])
+
+    setMessages([...originals.slice(0, unCompletedIndex), nextMessage])
+  }, [originals])
 
   return (
     <></>
