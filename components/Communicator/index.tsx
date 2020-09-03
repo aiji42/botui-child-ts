@@ -34,7 +34,7 @@ const meses: Array<Message> = [
   //   }, completed: false
   // },
   // { human: true, content: { type: 'form', props: { type: 'FormCreditCard' } }, completed: false },
-  { human: true, content: { type: 'form', props: { type: 'FormName', values: { familyName: 'あああ', familyNameKana: 'アアア' } } }, completed: false, after: 'message.content.props.values.firstName = "愛史2"' },
+  { human: true, content: { type: 'form', props: { type: 'FormName', values: { familyName: 'あああ', familyNameKana: 'アアア' } } }, completed: false },
   { human: false, content: { type: 'string', props: { children: '' }, delay: 500 }, completed: false, before: 'message.content.props.children = `${values.familyName}さんこんにちは！`; console.log(values)' },
   { human: true, content: { type: 'form', props: { type: 'FormAddress' } }, completed: false },
   { human: true, content: { type: 'form', props: { type: 'FormTel', values: { tel: '08012341234' } } }, completed: false },
@@ -49,16 +49,15 @@ const Commmunicator = () => {
   const [originals, setOriginals] = useState<Array<Message>>(meses)
 
   useEffect(() => {
-    setOriginals([...messages, ...originals.slice(messages.length)])
+    const updatedIndex = messages.findIndex(({ updated }) => updated)
+    if (updatedIndex > 0) {
+      setMessages([...messages.slice(0, updatedIndex), { ...messages[updatedIndex], updated: false }])
+      return
+    }
+    setOriginals([...messages, ...originals.slice(messages.length).reduce<Array<Message>>((res, original) => [...res, { ...original, completed: false }], [])])
   }, [messages])
 
   useEffect(() => {
-    const updatedIndex = originals.findIndex(({ updated }) => updated)
-    if (updatedIndex > 0) {
-      setMessages([...originals.slice(0, updatedIndex), { ...originals[updatedIndex], updated: false }])
-      return
-    }
-
     if (messages.some(({ completed }) => !completed)) return
 
     const unCompletedIndex = originals.findIndex(({ completed }) => !completed)
@@ -70,7 +69,7 @@ const Commmunicator = () => {
 
     if (!originals[unCompletedIndex]) return
     const nextMessage = { ...originals[unCompletedIndex], completed: false }
-    if (nextMessage?.before) {
+    if (nextMessage.before) {
       const beforeFuction = new Function('values', 'message', nextMessage.before)
       beforeFuction(values(originals), nextMessage)
     }
