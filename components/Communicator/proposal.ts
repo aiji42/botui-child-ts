@@ -1,26 +1,27 @@
+import { Message as Proposal } from '@botui/types'
 
-export interface Proposal {
-  human: boolean
-  content: any
-  delay?: number
-  completed: boolean
-  updated?: boolean
-  before?: string
-  after?: string
-}
 export interface Propsals extends Array<Proposal> { }
 
 export const proposals: Propsals  = [
-  { human: false, content: { type: 'string', props: { children: 'こんにちは' }, delay: 500 }, completed: false },
+  { human: false, content: { type: 'string', props: { children: 'こんにちは' }, delay: 500 }, completed: false, updated: false, before: '', after: '' },
   {
-    human: true, content: {
-      type: 'form', props: {
-        type: 'FormCustomInput', values: { hoge: 123 }, inputs: [{
-          name: 'hoge', type: 'tel', title: 'サンプル', placeholder: '0123',
-          validation: { type: 'number', min: [4, '桁数が足りません'] }
-        }]
+    human: true,
+    content: {
+      type: 'form',
+      props: {
+        type: 'FormCustomInput',
+        inputs: [{
+          name: 'hoge', type: 'number', title: 'サンプル', placeholder: '0123',
+          validation: { type: 'number', min: [4, '桁数が足りません'] },
+        }],
+        values: { hoge: '1234' },
+        onSubmited: () => { }
       }
-    }, completed: false
+    },
+    completed: false,
+    updated: false,
+    before: '',
+    after: '',
   },
   // {
   //   human: true, content: {
@@ -32,10 +33,24 @@ export const proposals: Propsals  = [
   //   }, completed: false
   // },
   // { human: true, content: { type: 'form', props: { type: 'FormCreditCard' } }, completed: false },
-  { human: true, content: { type: 'form', props: { type: 'FormName', values: { familyName: 'あああ', familyNameKana: 'アアア' } } }, completed: false },
-  { human: false, content: { type: 'string', props: { children: '' }, delay: 500 }, completed: false, before: 'message.content.props.children = `${values.familyName}さんこんにちは！`; console.log(values)' },
-  { human: true, content: { type: 'form', props: { type: 'FormAddress' } }, completed: false },
-  { human: true, content: { type: 'form', props: { type: 'FormTel', values: { tel: '08012341234' } } }, completed: false },
-  { human: true, content: { type: 'form', props: { type: 'FormEmail' } }, completed: false },
-  { human: true, content: { type: 'form', props: { type: 'FormBirthDay' } }, completed: false },
+  {
+    human: true,
+    content: {
+      type: 'form',
+      props: {
+        type: 'FormName',
+        values: { familyName: 'あああ', familyNameKana: 'アアア' },
+        onSubmited: () => { }
+      }
+    },
+    completed: false,
+    updated: false,
+    before: '',
+    after: ''
+  },
+  { human: false, content: { type: 'string', props: { children: '' }, delay: 500 }, completed: false, updated: false, after: '', before: 'message.content.props.children = `${values.familyName}さんこんにちは！`; console.log(values)' },
+  { human: true, content: { type: 'form', props: { type: 'FormAddress', values: {}, onSubmited: () => {} } }, completed: false, updated: false, after: '', before: '' },
+  { human: true, content: { type: 'form', props: { type: 'FormTel', values: { tel: '08012341234' }, onSubmited: () => {} } }, completed: false, updated: false, after: '', before: '' },
+  { human: true, content: { type: 'form', props: { type: 'FormEmail', values: {}, onSubmited: () => { } } }, completed: false, updated: false, after: '', before: '' },
+  { human: true, content: { type: 'form', props: { type: 'FormBirthDay', values: {}, onSubmited: () => { } } }, completed: false, updated: false, after: '', before: '' },
 ]

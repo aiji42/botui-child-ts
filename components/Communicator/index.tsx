@@ -2,7 +2,10 @@ import React, { FC, useEffect, useState } from 'react'
 import { useCorsState } from 'use-cors-state'
 import { proposals as initProposals, Propsals } from './proposal'
 
-const values = (messages: Propsals): { [x: string]: any } => messages.reduce((res, message) => message.content.props?.values ? { ...res, ...message.content.props.values } : res, {})
+const values = (messages: Propsals): { [x: string]: any } => messages.reduce((res, message) => {
+  if (message.content.type !== 'form') return res
+  return message.content.props.values ? { ...res, ...message.content.props.values } : res
+}, {})
 
 const Communicator: FC<{ targetWindow: Window }> = ({ targetWindow }) => {
   const [messages, setMessages] = useCorsState<Propsals>('chat-messages', { window: targetWindow }, [])
