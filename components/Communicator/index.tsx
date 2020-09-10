@@ -1,15 +1,17 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useCorsState } from 'use-cors-state'
-import { proposals as initProposals, Propsals } from './proposal'
+import { Message as Proposal } from '@botui/types'
 
-const values = (messages: Propsals): { [x: string]: any } => messages.reduce((res, message) => {
+export interface Proposals extends Array<Proposal> { }
+
+const values = (messages: Proposals): { [x: string]: any } => messages.reduce((res, message) => {
   if (message.content.type !== 'form') return res
   return message.content.props.values ? { ...res, ...message.content.props.values } : res
 }, {})
 
-const Communicator: FC<{ targetWindow: Window }> = ({ targetWindow }) => {
-  const [messages, setMessages] = useCorsState<Propsals>('chat-messages', { window: targetWindow }, [])
-  const [proposals, setProposals] = useState<Propsals>(initProposals)
+const Communicator: FC<{ targetWindow: Window, initProposals: Proposals }> = ({ targetWindow, initProposals }) => {
+  const [messages, setMessages] = useCorsState<Proposals>('chat-messages', { window: targetWindow }, [])
+  const [proposals, setProposals] = useState<Proposals>(initProposals)
 
   useEffect(() => {
     const updatedIndex = messages.findIndex(({ updated }) => updated)
@@ -17,7 +19,7 @@ const Communicator: FC<{ targetWindow: Window }> = ({ targetWindow }) => {
       setMessages([...messages.slice(0, updatedIndex), { ...messages[updatedIndex], updated: false }])
       return
     }
-    setProposals([...messages, ...proposals.slice(messages.length).reduce<Propsals>((res, original) => [...res, { ...original, completed: false }], [])])
+    setProposals([...messages, ...proposals.slice(messages.length).reduce<Proposals>((res, original) => [...res, { ...original, completed: false }], [])])
   }, [messages])
 
   useEffect(() => {
