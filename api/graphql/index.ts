@@ -13,6 +13,7 @@ export const getSession = gql`
   query GetSession($id: ID!) {
     getSession(id: $id) {
       proposals
+      active
     }
   }
 `
